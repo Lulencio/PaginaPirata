@@ -1,0 +1,113 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   TEMA (Colores base y derivados)
+   Cambia --accent para modificar el “neón” principal (morado/azul).
+   ────────────────────────────────────────────────────────────────────────── */
+:root{
+  /* Fondo (azul profundo) */
+  --bg-1:#00010a;
+  --bg-2:#0b1030;
+
+  /* Acento (neón morado). Sugerencias: #8b5cf6, #a78bfa, #9b8cff */
+  --accent:#9b8cff;
+
+  /* Derivados */
+  --grid: rgba(155,140,255,.55);  /* líneas de la cuadrícula */
+  --scan: rgba(155,140,255,.06);  /* scanlines CRT */
+  --hud-bg: rgba(8,12,28,.55);    /* paneles semi-transp. */
+  --hud-bd: rgba(155,140,255,.35);
+  --hud-tx: #dcd5ff;              /* texto UI */
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   LAYOUT / FONDO
+   ────────────────────────────────────────────────────────────────────────── */
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  background: radial-gradient(1200px 600px at 20% -10%, var(--bg-2) 0%, #050a22 60%, var(--bg-1) 100%);
+  overflow:hidden; /* evita scroll accidental */
+}
+
+/* Cuadrícula sutil (queda por debajo de todo) */
+.grid{
+  position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.08;
+  background:
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/40px 40px,
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0/40px 40px;
+  filter: blur(.3px);
+}
+
+/* Scanlines estilo CRT (sin “teñir” todo) */
+.crt{
+  position:fixed; inset:0; pointer-events:none; z-index:100;
+  background:repeating-linear-gradient(
+    0deg,
+    var(--scan), var(--scan) 1px,
+    transparent 1px, transparent 3px
+  );
+  opacity:.12;
+}
+
+/* Capas de los canvas (orden importante) */
+#matrix{ position:fixed; inset:0; z-index:1; background:transparent; display:block; } /* lluvia */
+#sphere{ position:fixed; inset:0; z-index:2; background:transparent; display:block; } /* esfera */
+#eye   { position:fixed; inset:0; z-index:3; background:transparent; display:block; image-rendering: pixelated; } /* ojo */
+#draw  { position:fixed; inset:0; z-index:4; background:transparent; display:block; cursor:crosshair; } /* dibujo */
+
+/* HUD (título/subtítulo) y Bloc de notas editable */
+.hud{
+  position:fixed; top:22px; left:22px; z-index:5; max-width:540px;
+  background:var(--hud-bg);
+  border:1px solid var(--hud-bd);
+  color:var(--hud-tx);
+  border-radius:10px; padding:12px 14px;
+  box-shadow:0 0 24px color-mix(in oklab, var(--accent) 24%, transparent),
+             inset 0 0 12px color-mix(in oklab, var(--accent) 12%, transparent);
+  backdrop-filter:blur(2px);
+}
+.hud h2{ margin:0 0 6px; color:var(--accent); letter-spacing:.5px; }
+.hud p{ margin:0; opacity:.9 }
+.typing::after{ content:"▌"; margin-left:4px; animation:blink 1s step-start infinite; }
+@keyframes blink{ 50%{ opacity:0 } }
+
+.note{
+  position:fixed; left:24px; bottom:24px; z-index:5;
+  width:460px; min-height:150px; outline:none;
+  background:var(--hud-bg);
+  border:1px solid var(--hud-bd);
+  color:var(--hud-tx);
+  border-radius:10px; padding:10px 12px; font-size:14px; line-height:1.5;
+  box-shadow:0 0 20px color-mix(in oklab, var(--accent) 18%, transparent),
+             inset 0 0 10px color-mix(in oklab, var(--accent) 10%, transparent);
+  caret-color:var(--accent);
+}
+.note:empty:before{ content:attr(data-placeholder); color:color-mix(in oklab, var(--hud-tx) 60%, transparent); }
+
+/* Toolbar del módulo de dibujo (abajo/derecha) */
+.toolbar{
+  position:fixed;
+  right: calc(18px + env(safe-area-inset-right));
+  bottom: calc(18px + env(safe-area-inset-bottom));
+  z-index:6;
+  display:flex; gap:8px; align-items:center; padding:8px 10px;
+  background:var(--hud-bg);
+  border:1px solid var(--hud-bd);
+  color:var(--hud-tx);
+  border-radius:10px;
+  box-shadow:0 0 18px color-mix(in oklab, var(--accent) 22%, transparent),
+             inset 0 0 10px color-mix(in oklab, var(--accent) 10%, transparent);
+  font-size:13px;
+}
+.toolbar .btn, .toolbar input[type="range"]{
+  background:#0f1436; border:1px solid color-mix(in oklab, var(--accent) 30%, #0f1436);
+  color:var(--hud-tx); border-radius:8px; padding:6px 10px; outline:none;
+}
+.toolbar .btn{ cursor:pointer }
+.toolbar label{opacity:.8}
+
+/* pequeños ajustes responsive */
+@media (max-width:520px){
+  .note{ width: calc(100% - 48px); left:12px; right:12px; }
+  .hud{ max-width: calc(100% - 48px); left:12px; }
+}
