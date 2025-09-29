@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Página Pirata</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Fondo base -->
+  <div class="grid" aria-hidden="true"></div>
+  <!-- Canvas 1: lluvia de símbolos (fondo) -->
+  <canvas id="matrix"></canvas>
+  <!-- Canvas 2: esfera wireframe (encima de la lluvia) -->
+  <canvas id="sphere"></canvas>
+  <!-- Canvas 3: ojo-->
+  <canvas id="eye"></canvas>
+  <!-- Canvas 4: capa de dibujo manual (encima de la esfera) -->
+  <canvas id="draw"></canvas>
+  <!-- HUD editable (título/subtítulo) -->
+  <section class="hud" aria-label="HUD">
+    <h2 id="headline" class="typing" contenteditable="true">Página Pirata</h2>
+    <p id="subline" contenteditable="true">Tripulación del pirata Lukenciou</p>
+  </section>
+
+  <!-- Bloc de notas persistente -->
+  <div id="note" class="note" contenteditable="true" spellcheck="false"
+       data-placeholder="Escribe aquí tus notas (Shift+Enter = salto de línea)"></div>
+
+  <!-- Toolbar del módulo de dibujo -->
+  <div class="toolbar" role="toolbar" aria-label="Dibujo">
+    <label>Size</label>
+    <input id="size" type="range" min="1" max="40" value="6" />
+    <button class="btn" id="brush">Brush</button>
+    <button class="btn" id="eraser">Eraser</button>
+    <button class="btn" id="clear">Clear</button>
+    <button class="btn" id="save">Save PNG</button>
+  </div>
+
+  <!-- Scanlines CRT (sobre UI) -->
+  <div class="crt" aria-hidden="true"></div>
+
+  <!-- Módulos JS (ES modules) -->
+  <script type="module" src="js/main.js" defer></script>
+</body>
+</html>
